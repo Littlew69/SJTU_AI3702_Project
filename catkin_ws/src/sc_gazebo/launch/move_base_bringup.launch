@@ -1,0 +1,42 @@
+<launch>
+  <master auto="start"/>
+  <param name="use_sim_time" value="true" />
+
+
+  
+
+ <node name="rviz" pkg="rviz" type="rviz" args="-d $(find sc_gazebo)/launch/my.rviz" />
+
+
+  <!-- Run the map server -->
+  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(find sc_gazebo)/maps/small_house.yaml" output="screen"/>-->
+
+  <!--- Run AMCL -->
+  <!--<include file="$(find amcl)/examples/amcl_diff.launch" >
+	<param name="scan" value="scan"/>
+	<param name="use_sim_time" value="false" />
+  </include>-->
+
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+                <rosparam file="$(find sc_gazebo)/launch/costmap_common_params.yaml" command="load" ns="global_costmap" />
+  	 	<rosparam file="$(find sc_gazebo)/launch/costmap_common_params.yaml" command="load" ns="local_costmap" />
+  		<rosparam file="$(find sc_gazebo)/launch/local_costmap_params.yaml" command="load" />
+  		<rosparam file="$(find sc_gazebo)/launch/global_costmap_params.yaml" command="load" />
+  		<rosparam file="$(find sc_gazebo)/launch/teb_local_planner_params.yaml" command="load" />
+
+
+		<param name="base_global_planner" value="global_planner/GlobalPlanner" />
+		<!--<param name="base_global_planner" value="rrt_plan/rrt_planner" />-->
+		<param name="planner_frequency" value="2.0" />
+		<param name="planner_patience" value="5.0" />
+
+		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+		<param name="controller_frequency" value="25.0" />
+		<param name="controller_patience" value="50.0" />
+                
+
+
+
+  </node>
+</launch>
